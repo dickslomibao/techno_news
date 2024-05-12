@@ -17,22 +17,13 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
@@ -66,4 +57,31 @@ class DefaultFirebaseOptions {
     authDomain: 'technonews-744ee.firebaseapp.com',
     storageBucket: 'technonews-744ee.appspot.com',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAN-DkZQl3w3ChTkUhw5imPNXTu8hHyevg',
+    appId: '1:155073732290:web:94959eabcd8a0cc544e55b',
+    messagingSenderId: '155073732290',
+    projectId: 'technonews-744ee',
+    authDomain: 'technonews-744ee.firebaseapp.com',
+    storageBucket: 'technonews-744ee.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBRf9ojQ-O1hCHDB8d9kmCeiha6Y5-r6bs',
+    appId: '1:155073732290:ios:5098363d71f8736944e55b',
+    messagingSenderId: '155073732290',
+    projectId: 'technonews-744ee',
+    storageBucket: 'technonews-744ee.appspot.com',
+    iosBundleId: 'com.example.technoNews',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyDqTehOTNroz1t9uSRJA87y08oLzl0Rve8',
+    appId: '1:155073732290:android:58d06827d5d409ee44e55b',
+    messagingSenderId: '155073732290',
+    projectId: 'technonews-744ee',
+    storageBucket: 'technonews-744ee.appspot.com',
+  );
+
 }
