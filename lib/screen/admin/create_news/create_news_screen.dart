@@ -1,8 +1,13 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:provider/provider.dart';
 import 'package:techno_news/provider/new_category_controller.dart';
+import 'package:techno_news/provider/news_controller.dart';
+import 'package:techno_news/screen/admin/create_news/widgets/add_more_images.dart';
+import 'package:techno_news/shared_widgets/buttons/button_widget.dart';
 import 'package:techno_news/shared_widgets/textfields/text_field.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateNewsScreen extends StatefulWidget {
   const CreateNewsScreen({Key? key}) : super(key: key);
@@ -12,6 +17,29 @@ class CreateNewsScreen extends StatefulWidget {
 }
 
 class _CreateNewsScreenState extends State<CreateNewsScreen> {
+  final title = TextEditingController();
+  final content = TextEditingController();
+  final controller = MultiImagePickerController(
+    maxImages: 15,
+    picker: (bool allowMultiple) async {
+      final ImagePicker picker = ImagePicker();
+      final pickedImages = await picker.pickMultiImage();
+      return pickedImages
+          .map((e) => ImageFile(
+                UniqueKey()
+                    .toString(), // A unique key required to track it in grid view.
+                name: e.name,
+                extension: e.name.split('.').last,
+                path: e.path,
+              ))
+          .toList();
+    },
+  );
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void showModalSelectCategory() {
     showModalBottomSheet(
       context: context,
@@ -123,6 +151,9 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                                     element.id == value.selectedCategory[index],
                               );
                               return Container(
+                                margin: const EdgeInsets.only(
+                                  right: 15,
+                                ),
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 15,
                                 ),
@@ -144,10 +175,18 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      const Icon(
-                                        Icons.close,
-                                        size: 16,
-                                        color: Colors.white,
+                                      GestureDetector(
+                                        onTap: () {
+                                          context
+                                              .read<NewsCategoryController>()
+                                              .removeSelectedCategory(value
+                                                  .selectedCategory[index]);
+                                        },
+                                        child: const Icon(
+                                          Icons.close,
+                                          size: 16,
+                                          color: Colors.white,
+                                        ),
                                       )
                                     ],
                                   ),
@@ -191,7 +230,7 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
               ),
               TextFieldWidget(
                 label: "News Title",
-                controller: TextEditingController(),
+                controller: title,
               ),
               const SizedBox(
                 height: 15,
@@ -219,7 +258,7 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextField(
-                  controller: TextEditingController(),
+                  controller: content,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(0),
@@ -242,33 +281,46 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                width: double.infinity,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: const Color(0xffEFF0F6),
-                  borderRadius: BorderRadius.circular(10),
+              MultiImagePickerView(
+                draggable: true,
+                shrinkWrap: true,
+                controller: controller,
+                padding: const EdgeInsets.all(0),
+                addMoreButton: GestureDetector(
+                  onTap: () async {
+                    await controller.pickImages();
+                  },
+                  child: const AddMoreImagesWidget(),
                 ),
-                child: const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add_photo_alternate_outlined,
-                          color: Color(0xff6c7278)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Upload Images',
-                        style: TextStyle(
-                          color: Color(0xfff6c7278),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
+                initialWidget: GestureDetector(
+                  onTap: () async {
+                    await controller.pickImages();
+                  },
+                  child: const AddMoreImagesWidget(),
                 ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              ButtonWidget(
+                  onPressed: () async {
+                    final success =
+                        await context.read<NewsController>().createNews(
+                              images: controller.images.toList(),
+                              categories: context
+                                  .read<NewsCategoryController>()
+                                  .selectedCategory,
+                              title: title.text,
+                              content: content.text,
+                            );
+
+                    if (context.mounted && success) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  title: 'Publish news'),
+              const SizedBox(
+                height: 20,
               ),
             ],
           ),

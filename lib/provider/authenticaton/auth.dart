@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -40,10 +41,19 @@ class AuthController extends ChangeNotifier {
       return;
     }
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final id = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(id.user!.uid)
+          .set({
+        'full_name': fullName,
+        'date_created': DateTime.now().microsecondsSinceEpoch,
+        'type': 'user',
+      });
     } on FirebaseAuthException catch (e) {
       firebaseAuthExceptionHandler(e);
     } catch (e) {
@@ -81,13 +91,11 @@ class AuthController extends ChangeNotifier {
 
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
-
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      final id = await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       firebaseAuthExceptionHandler(e);
     }

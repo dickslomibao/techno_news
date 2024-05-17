@@ -5,7 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:techno_news/firebase_options.dart';
 import 'package:techno_news/provider/authenticaton/auth.dart';
+import 'package:techno_news/provider/bookmarks_controller.dart';
 import 'package:techno_news/provider/new_category_controller.dart';
+import 'package:techno_news/provider/news_controller.dart';
 import 'package:techno_news/screen/admin/create_news/create_news_screen.dart';
 import 'package:techno_news/screen/auth/authentication_screen.dart';
 import 'package:techno_news/screen/auth/login_screen/login_screen.dart';
@@ -36,6 +38,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => NewsCategoryController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => NewsController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => BookmarkController(),
         )
       ],
       child: MaterialApp(
