@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:techno_news/provider/authenticaton/auth.dart';
 import 'package:techno_news/screen/auth/register_screen/register_screen.dart';
 import 'package:techno_news/shared_widgets/buttons/button_widget.dart';
 import 'package:techno_news/shared_widgets/buttons/social_button_widget.dart';
 import 'package:techno_news/shared_widgets/textfields/text_field.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
+  const LoginScreen({Key? key, required this.onNavigationChange})
+      : super(key: key);
+  final Function onNavigationChange;
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -104,11 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterScreen(),
-                              ),
-                            );
+                            widget.onNavigationChange();
                           },
                           child: const Text(
                             "Sign Up",
@@ -139,28 +138,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 10,
                     ),
                     const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.check_box_outline_blank,
-                              color: Color(0xfff909599),
-                              size: 21,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Remember me",
-                              style: TextStyle(
-                                color: Color(0xfff6c7278),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
                         Text(
                           "Forgot Password?",
                           style: TextStyle(
@@ -174,7 +153,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(
                       height: 30,
                     ),
-                    ButtonWidget(onPressed: () {}, title: 'Log In'),
+                    ButtonWidget(
+                        onPressed: () async {
+                          await context
+                              .read<AuthController>()
+                              .loginWithEmailAndPassword(
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                              );
+                        },
+                        title: 'Log In'),
                     const SizedBox(
                       height: 20,
                     ),
@@ -210,14 +198,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const SocialButtonWidget(
+                    SocialButtonWidget(
                       label: 'Continue with Google',
+                      socialType: 'google',
+                      onTap: () async {
+                        await context
+                            .read<AuthController>()
+                            .continueWithGoogle();
+                      },
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    const SocialButtonWidget(
+                    SocialButtonWidget(
                       label: 'Continue with Facebook',
+                      socialType: 'fb',
+                      onTap: () async {
+                        await context
+                            .read<AuthController>()
+                            .continueWithFacebook();
+                      },
                     ),
                   ],
                 ),

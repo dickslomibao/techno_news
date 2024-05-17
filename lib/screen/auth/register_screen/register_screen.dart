@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:techno_news/provider/authenticaton/register_controller.dart';
+import 'package:techno_news/provider/authenticaton/auth.dart';
 import 'package:techno_news/screen/auth/login_screen/login_screen.dart';
+import 'package:techno_news/screen/client/home/home_screen.dart';
 import 'package:techno_news/shared_widgets/buttons/button_widget.dart';
 import 'package:techno_news/shared_widgets/textfields/text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
-
+  const RegisterScreen({Key? key, required this.onNavigationChange})
+      : super(key: key);
+  final Function onNavigationChange;
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -111,11 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
+                            widget.onNavigationChange();
                           },
                           child: const Text(
                             "Log in",
@@ -161,14 +159,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     ButtonWidget(
                       onPressed: () async {
-                        await context
-                            .read<RegisterController>()
-                            .createAnAccount(
-                                fullName: fullNameController.text.trim(),
-                                email: emailController.text.trim(),
-                                password: passwordController.text.trim(),
-                                passwordConfirmation:
-                                    passwordConfirmationController.text.trim());
+                        await context.read<AuthController>().createAnAccount(
+                            fullName: fullNameController.text.trim(),
+                            email: emailController.text.trim(),
+                            password: passwordController.text.trim(),
+                            passwordConfirmation:
+                                passwordConfirmationController.text.trim());
+                        // if (context.mounted && isSuccess == true) {
+                        //   Navigator.of(context).pushReplacement(
+                        //     MaterialPageRoute(
+                        //       builder: (context) => const HomeScreen(),
+                        //     ),
+                        //   );
+                        // }
                       },
                       title: 'Register',
                     ),

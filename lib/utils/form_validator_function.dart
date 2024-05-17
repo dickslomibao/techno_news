@@ -29,3 +29,20 @@ bool validateRegistrationForm({
   }
   return true;
 }
+
+/// It return true if valid
+bool validateLoginForm({
+  required String email,
+  required String password,
+}) {
+  if (email.isEmpty) {
+    handleToastError('Email is required.');
+    return false;
+  }
+  if (password.isEmpty) {
+    handleToastError('Password is required.');
+    return false;
+  }
+
+  return true;
+}
