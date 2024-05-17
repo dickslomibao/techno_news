@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 void firebaseAuthExceptionHandler(e) {
-  print(e.code);
-  print('asdasda');
   String message = "Cannot process the operation. Please try again";
   if (e.code == 'weak-password') {
     message = 'The password provided is too weak.';

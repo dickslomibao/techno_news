@@ -4,19 +4,20 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:techno_news/provider/new_category_controller.dart';
 import 'package:techno_news/provider/news_controller.dart';
-import 'package:techno_news/screen/client/home/widgets/main_header.dart';
+import 'package:techno_news/screen/admin/create_news/create_news_screen.dart';
+import 'package:techno_news/screen/admin/home/widgets/main_header.dart';
 import 'package:techno_news/shared_widgets/buttons/button_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:techno_news/shared_widgets/cards/news_card.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class AdminHomeScreen extends StatefulWidget {
+  const AdminHomeScreen({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _AdminHomeScreenState createState() => _AdminHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _AdminHomeScreenState extends State<AdminHomeScreen> {
   @override
   void initState() {
     context.read<NewsCategoryController>().getCategory();
@@ -38,24 +39,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Latest News',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: const Color(0xFF716E6E),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // const Text(
+                  //   'Latest News',
+                  //   style: TextStyle(
+                  //     fontSize: 24,
+                  //     fontWeight: FontWeight.w600,
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                  // Container(
+                  //   height: 1,
+                  //   width: double.infinity,
+                  //   color: const Color(0xFF716E6E),
+                  // ),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
                   Expanded(
                     child: StreamBuilder(
                       stream: context.read<NewsController>().getNewsSnapshots(),
@@ -84,6 +85,28 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          ButtonWidget(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              // await FirebaseAuth.instance.signOut();
+              // Restart.restartApp();
+            },
+            title: 'Logout',
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ButtonWidget(
+              onPressed: () {
+                context.read<NewsCategoryController>().selectedCategory.clear();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CreateNewsScreen(),
+                  ),
+                );
+              },
+              title: 'Create a news',
+            ),
+          )
         ],
       ),
     );

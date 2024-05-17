@@ -1,3 +1,4 @@
+import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:techno_news/utils/helper_function.dart';
 
 /// It return true if valid
@@ -44,5 +45,31 @@ bool validateLoginForm({
     return false;
   }
 
+  return true;
+}
+
+/// It return true if valid
+bool validateCreateNewsForm({
+  required List<ImageFile> images,
+  required List<String> categories,
+  required String title,
+  required String content,
+}) {
+  if (categories.isEmpty) {
+    handleToastError('Category is required.');
+    return false;
+  }
+  if (title.isEmpty) {
+    handleToastError('Title is required.');
+    return false;
+  }
+  if (content.isEmpty) {
+    handleToastError('Content is required.');
+    return false;
+  }
+  if (images.isEmpty) {
+    handleToastError('Images is required.');
+    return false;
+  }
   return true;
 }
