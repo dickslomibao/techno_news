@@ -22,6 +22,8 @@ class AuthController extends ChangeNotifier {
       } else {
         isLogin = false;
       }
+      print('herreeeeee');
+      print(isLogin);
       notifyListeners();
     });
   }

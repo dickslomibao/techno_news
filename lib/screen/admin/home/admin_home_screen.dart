@@ -85,14 +85,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               ),
             ),
           ),
-          ButtonWidget(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              // await FirebaseAuth.instance.signOut();
-              // Restart.restartApp();
-            },
-            title: 'Logout',
-          ),
+          // ButtonWidget(
+          //   onPressed: () async {
+          //     await FirebaseAuth.instance.signOut();
+          //     // await FirebaseAuth.instance.signOut();
+          //     // Restart.restartApp();
+          //   },
+          //   title: 'Logout',
+          // ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ButtonWidget(

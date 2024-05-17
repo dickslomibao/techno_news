@@ -14,6 +14,7 @@ import 'package:techno_news/screen/auth/login_screen/login_screen.dart';
 import 'package:techno_news/screen/auth/register_screen/register_screen.dart';
 import 'package:techno_news/screen/client/home/home_screen.dart';
 import 'package:techno_news/screen/client/main_screen.dart';
+import 'package:techno_news/screen/restart_widget.dart';
 import 'package:techno_news/screen/screen_resources_loader.dart';
 import 'package:techno_news/screen/splash_screen/splash_screen.dart';
 
@@ -46,20 +47,22 @@ class MyApp extends StatelessWidget {
           create: (context) => BookmarkController(),
         )
       ],
-      child: MaterialApp(
-        builder: FToastBuilder(),
-        title: 'Techno News',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: Consumer<AuthController>(
-          builder: (context, value, child) => value.showSplash
-              ? const SplashScreen()
-              : value.isLogin
-                  ? const ScreenResourcesLoader()
-                  : const AuthenticationScreen(),
+      child: RestartWidget(
+        child: MaterialApp(
+          builder: FToastBuilder(),
+          title: 'Techno News',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: Consumer<AuthController>(
+            builder: (context, value, child) => value.showSplash
+                ? const SplashScreen()
+                : value.isLogin
+                    ? const ScreenResourcesLoader()
+                    : const AuthenticationScreen(),
+          ),
         ),
       ),
     );

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:techno_news/screen/restart_widget.dart';
 
 class MainHeader extends StatelessWidget {
   const MainHeader({super.key});
@@ -24,6 +26,23 @@ class MainHeader extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    if (context.mounted) {
+                      RestartWidget.restartApp(context);
+                    }
+                  },
+                  child: const Icon(
+                    Icons.logout_rounded,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
